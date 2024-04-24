@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 입력</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: calc(100% - 12px);
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>로또 번호 입력</h1>
+    <form id="lottoForm">
+        <div class="form-group">
+            <label>로또 번호 (1~45): 띄어쓰기로 하면 돼!(ex 1 2 3 4 5 6)</label>
+            <input type="text" name="line1" placeholder="1번째 줄 (띄어쓰기로 구분)">
+            <input type="text" name="line2" placeholder="2번째 줄 (띄어쓰기로 구분)">
+            <input type="text" name="line3" placeholder="3번째 줄 (띄어쓰기로 구분)">
+            <input type="text" name="line4" placeholder="4번째 줄 (띄어쓰기로 구분)">
+            <input type="text" name="line5" placeholder="5번째 줄 (띄어쓰기로 구분)">
+        </div>
+        <input type="submit" value="확인">
+    </form>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    document.getElementById('lottoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var allNumbers = [];
+        for (var i = 1; i <= 5; i++) {
+            var lineInput = document.getElementsByName('line' + i)[0].value;
+            var numbers = lineInput.split(' ').map(function(num) {
+                return parseInt(num.trim(), 10);
+            }).filter(function(num) {
+                return !isNaN(num) && num >= 1 && num <= 45;
+            });
+            allNumbers = allNumbers.concat(numbers);
+        }
+
+        var excludedNumbers = [];
+        for (var j = 1; j <= 45; j++) {
+            if (allNumbers.indexOf(j) === -1) {
+                excludedNumbers.push(j);
+            }
+        }
+
+        var result = [];
+        for (var k = 0; k < 5; k++) {
+            var randomSelection = [];
+            while (randomSelection.length < 6) {
+                var randomIndex = Math.floor(Math.random() * excludedNumbers.length);
+                var randomNumber = excludedNumbers[randomIndex];
+                if (randomSelection.indexOf(randomNumber) === -1) {
+                    randomSelection.push(randomNumber);
+                }
+            }
+            result.push(randomSelection.sort(function(a, b) {
+                return a - b;
+            }));
+        }
+
+        document.getElementById('result').innerText = '추출된 번호:\n\n' + result.map(function(numbers) {
+            return numbers.join(' ');
+        }).join('\n');
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  test:
+    volumes:
+      - ./src/main:/app/src/main
+    ports:
+      - "9230:7777"
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    restart: always

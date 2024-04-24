@@ -1,0 +1,8 @@
+FROM eclipse-temurin:17
+WORKDIR /app
+COPY . /app
+RUN ./gradlew bootJar
+EXPOSE 7777
+RUN chmod +x start.sh && ./gradlew getDependencies
+# ENTRYPOINT ["./gradlew", "bootRun"]
+CMD ["sh", "start.sh"]
